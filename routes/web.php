@@ -11,13 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('main');
+Route::get('/', 'HomeController@main')->name('main');
 
-Route::get('/home', function () {
-    return view('home');
-})->name('home');
+Route::get('/home', 'HomeController@home')->name('home');
+
+Route::get('/about', 'HomeController@about')->name('about');
 
 Route::get('/posts/{postId}/{name?}', function ($id, $name = null) {
 
@@ -49,9 +47,3 @@ Route::get('/posts/{postId}/{name?}', function ($id, $name = null) {
 
     return view('post', ['post' => $posts[$id], 'postId' => $id, 'msg' => $welcomeMsg]);
 })->name('post');
-
-// Route::get('/about', function () {
-//     return view('about');
-// });
-
-Route::view('/about', 'about')->name('about');
