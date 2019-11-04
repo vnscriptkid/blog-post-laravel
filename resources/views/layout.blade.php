@@ -12,12 +12,10 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="#">Blog Post</a>
+            <a class="navbar-brand" href="{{ route('home') }}">Blog Post</a>
 
             <div class="collapse navbar-collapse ml-auto" id="navbarTogglerDemo03">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('main') }}">App</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('posts.index') }}">Posts</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('posts.create') }}">Create New Post</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">About</a></li>
@@ -27,24 +25,26 @@
 
     {{-- status display --}}
     @if (session()->has('status'))
-        <strong style="color: green;">{{ session()->get('status') }}</strong>
+        <div class="alert alert-success" role="alert">
+            {{ session()->get('status') }}
+        </div>
     @endif
 
     {{-- errors display --}}
     @if ($errors->any())
         <ul>
             @foreach ($errors->all() as $error)
-                <li style="color:red;">{{ $error }}</li>
+                <div class="alert alert-danger" role="alert">
+                    {{ $error }}
+                </div>
             @endforeach
         </ul>
     @endif
 
-    <div class="container">
+    <div class="container mt-3">
         @yield('content')
     </div>
 
-
-    <footer  style="height: 300px; background-color: aqua"></footer>
     <script src="js/app.js"></script>
 </body>
 </html>

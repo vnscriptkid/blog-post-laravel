@@ -12,6 +12,7 @@
         </div>
     @endforeach
 @else
-    <h1>There no posts found</h1>
+    <p class="lead">There no posts found</p>
 @endif
+
 @endsection
