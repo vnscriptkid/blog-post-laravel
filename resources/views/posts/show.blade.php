@@ -11,6 +11,12 @@
         @else
             <p>Created {{ $post->created_at->diffForHumans() }}</p>
         @endif
+        <a href="{{ route('posts.edit', ['post' => $post->id]) }}">Edit the post</a>
+        <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="post">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Delete this post</button>
+        </form>
         <hr>
     </div>
 @endsection
