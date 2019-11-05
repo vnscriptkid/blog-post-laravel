@@ -5,17 +5,30 @@ namespace App\Http\Controllers;
 use App\BlogPost;
 use App\Http\Requests\StorePost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
+    private function debugQuery($cb)
+    {
+        DB::connection()->enableQueryLog();
+
+        $cb();
+
+        $queries = DB::getQueryLog();
+        dd($queries);
+    }
+
     public function index()
     {
-        return view('posts.index', ['posts' => BlogPost::all()]);
+        $posts = BlogPost::withCount('comments')->get();
+        return view('posts.index', ['posts' => $posts]);
     }
 
     public function show($id)
     {
-        return view('posts.show', ['post' => BlogPost::findOrFail($id)]);
+        $post = BlogPost::with('comments')->findOrFail($id);
+        return view('posts.show', ['post' => $post]);
     }
 
     public function create()
@@ -59,4 +72,11 @@ class PostController extends Controller
         $request->session()->flash('status', "Blog post #{$id} has been deleted successfully");
         return redirect()->route('posts.index');
     }
+    // advanced queries: whereHas, whereDoesntHave, withCount
+    // 1. get all posts that has at least 1 comment
+    // 2. get all posts that has more than 3 comments
+    // 3. get all posts that has no comment
+    // 4. get all posts that comments containing `term`
+    // 5. get all posts with comments_count attached to each post
+    // 6. get all posts with new_comments attached that counts # of new comments
 }
