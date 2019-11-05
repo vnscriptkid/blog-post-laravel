@@ -11,6 +11,7 @@ use Tests\TestCase;
 class PostTest extends TestCase
 {
     const POST_TABLE = 'blog_posts';
+    const COMMENT_TABLE = 'comments';
 
     use RefreshDatabase;
     /**
@@ -153,5 +154,30 @@ class PostTest extends TestCase
         // Assert
         $response->assertRedirect(route('posts.index'))->assertSessionHas('status', "Blog post #{$post->id} has been deleted successfully");
         $this->assertDatabaseMissing(self::POST_TABLE, $post->toArray());
+    }
+
+    public function test_show_post_detail_with_no_comment()
+    {
+        // Arrange
+        $post = factory(BlogPost::class)->create();
+        $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
+        // Act
+        $response = $this->get(route('posts.show', ['post' => $post->id]));
+        // Assert
+        $response->assertStatus(200);
+        $response->assertSeeText("There's no comment yet");
+    }
+
+    public function test_show_post_detail_with_multiple_comments()
+    {
+        // Arrange
+        $post = factory(BlogPost::class)->create();
+        $comments = factory(Comment::class, 2)->create(['blog_post_id' => $post->id]);
+
+        // Act
+        $response = $this->get(route('posts.show', ['post' => $post->id]));
+        // Assert
+        $response->assertStatus(200);
+        $response->assertSeeInOrder([$comments[0]->content, $comments[1]->content]);
     }
 }

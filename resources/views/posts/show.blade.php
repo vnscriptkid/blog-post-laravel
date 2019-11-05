@@ -11,12 +11,22 @@
         @else
             <p>Created {{ $post->created_at->diffForHumans() }}</p>
         @endif
-        <a href="{{ route('posts.edit', ['post' => $post->id]) }}">Edit the post</a>
+        <a class="btn btn-warning" href="{{ route('posts.edit', ['post' => $post->id]) }}">Edit</a>
         <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="post">
             @csrf
             @method('DELETE')
-            <button type="submit">Delete this post</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
         </form>
         <hr>
+        <h2>Comments</h2>
+        @if (count($post->comments))
+            <ul>
+                @foreach ($post->comments as $comment)
+                    <li>{{ $comment->content }}</li>
+                @endforeach
+            </ul>
+        @else
+            <p>There's no comment yet</p>
+        @endif
     </div>
 @endsection
