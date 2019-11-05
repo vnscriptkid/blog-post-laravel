@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\BlogPost;
+use App\Comment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -25,39 +26,43 @@ class PostTest extends TestCase
         $reponse->assertSeeText('There no posts found');
     }
 
-    public function test_show_one_post_correctly()
+    public function test_show_one_post_no_comment_correctly()
     {
         // Arrage
-        $post = $this->createPostSample();
+        $post = factory(BlogPost::class)->create();
         // Act
         $response = $this->get(route('posts.index'));
         // Assert
         $response->assertStatus(200);
         $response->assertSeeText($post->title);
+        $response->assertSeeText('No comment yet');
         $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
+    }
+
+    public function test_show_one_post_with_3_comments()
+    {
+        // Arrange
+        $post = factory(BlogPost::class)->create();
+        factory(Comment::class, 3)->create(['blog_post_id' => $post->id]);
+
+        // Act
+        $response = $this->get(route('posts.index'));
+        // Assert
+        $response->assertStatus(200);
+        $response->assertSeeText('3 comments');
     }
 
     public function test_show_2_posts_correctly()
     {
         // Arrange
-        $data = [
-            [
-                'title' => 'test is easy',
-                'content' => 'as long as you do practice'
-            ],
-            [
-                'title' => 'test in php',
-                'content' => 'the principle is the same'
-            ]
-        ];
-        BlogPost::insert($data);
+        $posts = factory(BlogPost::class, 2)->create();
         // Act
         $response = $this->get('/posts');
         // Assert
         $response->assertStatus(200);
-        $response->assertSeeTextInOrder(['test is easy', 'test in php']);
-        $this->assertDatabaseHas('blog_posts', ['title' => 'test is easy']);
-        $this->assertDatabaseHas('blog_posts', ['title' => 'test in php']);
+        $response->assertSeeTextInOrder([$posts[0]->title, $posts[1]->title]);
+        $this->assertDatabaseHas(self::POST_TABLE, $posts[0]->toArray());
+        $this->assertDatabaseHas(self::POST_TABLE, $posts[1]->toArray());
     }
 
     public function test_store_valid_post()
@@ -92,7 +97,7 @@ class PostTest extends TestCase
     public function test_show_form_edit_post()
     {
         // Arrange
-        $post = $this->createPostSample();
+        $post = factory(BlogPost::class)->create();
         $this->assertTrue($post->id > 0);
         $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
         // Act
@@ -106,7 +111,7 @@ class PostTest extends TestCase
     public function test_update_valid_post()
     {
         // Arrange
-        $post = $this->createPostSample();
+        $post = factory(BlogPost::class)->create();
         $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
         // Act
         $response = $this->put(route('posts.update', ['post' => $post->id]), [
@@ -123,7 +128,7 @@ class PostTest extends TestCase
     public function test_update_post_with_invalid_data()
     {
         // Arrange
-        $post = $this->createPostSample();
+        $post = factory(BlogPost::class)->create();
         $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
         // Act
         $response = $this->put(route('posts.update', ['post' => $post->id]), [
@@ -141,20 +146,12 @@ class PostTest extends TestCase
     public function test_destroy_valid_post()
     {
         // Arrange
-        $post = $this->createPostSample();
+        $post = factory(BlogPost::class)->create();
         $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
         // Act
         $response = $this->delete(route('posts.destroy', ['post' => $post->id]));
         // Assert
         $response->assertRedirect(route('posts.index'))->assertSessionHas('status', "Blog post #{$post->id} has been deleted successfully");
         $this->assertDatabaseMissing(self::POST_TABLE, $post->toArray());
-    }
-
-    private function createPostSample(): BlogPost
-    {
-        return BlogPost::create([
-            'title' => 'a post sample',
-            'content' => 'it is just dummy data'
-        ]);
     }
 }
