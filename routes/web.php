@@ -11,12 +11,10 @@
 |
 */
 
-use App\BlogPost;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', 'HomeController@main')->name('main');
+Auth::routes();
 
-Route::get('/home', 'HomeController@home')->name('home');
+Route::resource('posts', 'PostController');
 
-Route::get('/about', 'HomeController@about')->name('about');
-
-Route::resource('posts', 'PostController')->except(['destroy']);
+Route::get('/home', 'HomeController@index')->name('home');
