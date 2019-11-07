@@ -25,6 +25,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('update-post', function ($user, $post) { // $user is always passed by laravel, $post is ur part
+            return $user->id == $post->user_id;
+        });
+
+        Gate::define('delete-post', function ($user, $post) {
+            return $user->id == $post->user_id;
+        });
     }
 }
