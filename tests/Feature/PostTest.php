@@ -69,7 +69,7 @@ class PostTest extends TestCase
     public function test_store_valid_post()
     {
         // Act
-        $response = $this->followingRedirects()->post('/posts', [
+        $response = $this->actingAs($this->user())->followingRedirects()->post('/posts', [
             'title' => 'store a post',
             'content' => 'hope it works correctly'
         ]);
@@ -83,7 +83,7 @@ class PostTest extends TestCase
     public function test_store_invalid_post()
     {
         // Act
-        $response = $this->post('/posts', [
+        $response = $this->actingAs($this->user())->post('/posts', [
             'title' => '',
             'content' => ''
         ]);
@@ -102,7 +102,7 @@ class PostTest extends TestCase
         $this->assertTrue($post->id > 0);
         $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
         // Act
-        $response = $this->get(route('posts.edit', ['post' => $post->id]));
+        $response = $this->actingAs($this->user())->get(route('posts.edit', ['post' => $post->id]));
         // Assert
         $response->assertStatus(200);
         $response->assertSee($post->title);
@@ -115,7 +115,7 @@ class PostTest extends TestCase
         $post = factory(BlogPost::class)->create();
         $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
         // Act
-        $response = $this->put(route('posts.update', ['post' => $post->id]), [
+        $response = $this->actingAs($this->user())->put(route('posts.update', ['post' => $post->id]), [
             'title' => 'data looks good',
             'content' => 'updating post worked'
         ]);
@@ -132,7 +132,7 @@ class PostTest extends TestCase
         $post = factory(BlogPost::class)->create();
         $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
         // Act
-        $response = $this->put(route('posts.update', ['post' => $post->id]), [
+        $response = $this->actingAs($this->user())->put(route('posts.update', ['post' => $post->id]), [
             'title' => 'xy',
             'content' => ''
         ]);
@@ -150,7 +150,7 @@ class PostTest extends TestCase
         $post = factory(BlogPost::class)->create();
         $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
         // Act
-        $response = $this->delete(route('posts.destroy', ['post' => $post->id]));
+        $response = $this->actingAs($this->user())->delete(route('posts.destroy', ['post' => $post->id]));
         // Assert
         $response->assertRedirect(route('posts.index'))->assertSessionHas('status', "Blog post #{$post->id} has been deleted successfully");
         $this->assertDatabaseMissing(self::POST_TABLE, $post->toArray());
