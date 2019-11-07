@@ -6,6 +6,7 @@
     @foreach ($posts as $post)
         <div>
             <h2>Post #{{ $post->id }} </h2>
+            <p>by {{ $post->user->name }}</p>
             @if ($post->comments_count > 0)
                 <span class="text-muted">{{ $post->comments_count }} comments</span>
             @else

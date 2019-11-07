@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\BlogPost;
 use App\Comment;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -30,20 +31,19 @@ class PostTest extends TestCase
     public function test_show_one_post_no_comment_correctly()
     {
         // Arrage
-        $post = factory(BlogPost::class)->create();
+        $post = $this->createPost();
         // Act
         $response = $this->get(route('posts.index'));
         // Assert
         $response->assertStatus(200);
         $response->assertSeeText($post->title);
         $response->assertSeeText('No comment yet');
-        $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
     }
 
     public function test_show_one_post_with_3_comments()
     {
         // Arrange
-        $post = factory(BlogPost::class)->create();
+        $post = $this->createPost();
         factory(Comment::class, 3)->create(['blog_post_id' => $post->id]);
 
         // Act
@@ -56,14 +56,15 @@ class PostTest extends TestCase
     public function test_show_2_posts_correctly()
     {
         // Arrange
-        $posts = factory(BlogPost::class, 2)->create();
+        $firstPost = $this->createPost();
+        $secondPost = $this->createPost();
         // Act
         $response = $this->get('/posts');
         // Assert
         $response->assertStatus(200);
-        $response->assertSeeTextInOrder([$posts[0]->title, $posts[1]->title]);
-        $this->assertDatabaseHas(self::POST_TABLE, $posts[0]->toArray());
-        $this->assertDatabaseHas(self::POST_TABLE, $posts[1]->toArray());
+        $response->assertSeeTextInOrder([$firstPost->title, $secondPost->title]);
+        // $this->assertDatabaseHas(self::POST_TABLE, $posts[0]->toArray());
+        // $this->assertDatabaseHas(self::POST_TABLE, $posts[1]->toArray());
     }
 
     public function test_store_valid_post()
@@ -179,5 +180,17 @@ class PostTest extends TestCase
         // Assert
         $response->assertStatus(200);
         $response->assertSeeInOrder([$comments[0]->content, $comments[1]->content]);
+    }
+
+    public function test_author_of_post_showed_in_index_page()
+    {
+        // Arrange
+        $user = $this->user();
+        $post = $this->createPost($user);
+        // Act
+        $response = $this->get(route('posts.index'));
+        // Assert
+        $response->assertStatus(200);
+        $response->assertSeeText("by {$user->name}");
     }
 }
