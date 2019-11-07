@@ -96,35 +96,43 @@ class PostTest extends TestCase
         $this->assertEquals($messages['content'][0], 'The content field is required.');
     }
 
-    public function test_show_form_edit_post()
+    public function test_show_form_edit_post_for_author()
     {
         // Arrange
-        $post = factory(BlogPost::class)->create();
-        $this->assertTrue($post->id > 0);
-        $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
+        $post = $this->createPost();
         // Act
-        $response = $this->actingAs($this->user())->get(route('posts.edit', ['post' => $post->id]));
+        $response = $this->actingAs($post->user)->get(route('posts.edit', ['post' => $post->id]));
         // Assert
         $response->assertStatus(200);
         $response->assertSee($post->title);
         $response->assertSeeText($post->content);
     }
 
+    public function test_not_showing_edit_post_form_for_unauthorized_user()
+    {
+        // Arrange
+        $post = $this->createPost();
+        // Act
+        $response = $this->actingAs($this->user())->get(route('posts.edit', ['post' => $post->id]));
+        // Assert
+        $response->assertStatus(403);
+    }
+
     public function test_update_valid_post()
     {
         // Arrange
-        $post = factory(BlogPost::class)->create();
-        $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
-        // Act
-        $response = $this->actingAs($this->user())->put(route('posts.update', ['post' => $post->id]), [
+        $post = $this->createPost();
+        $data = [
             'title' => 'data looks good',
             'content' => 'updating post worked'
-        ]);
+        ];
+        // Act
+        $response = $this->actingAs($post->user)->put(route('posts.update', ['post' => $post->id]), $data);
         // Assert
         $response->assertRedirect(route('posts.show', ['post' => $post->id]));
         $response->assertSessionHas('status', "Blog post #{$post->id} has been updated successfully");
-        $this->assertDatabaseHas(self::POST_TABLE, ['title' => 'data looks good']);
-        $this->assertDatabaseMissing(self::POST_TABLE, $post->toArray());
+        $this->assertDatabaseHas(self::POST_TABLE, ['title' => $data['title']]);
+        $this->assertDatabaseMissing(self::POST_TABLE, ['title' => $post->title]);
     }
 
     public function test_update_post_with_invalid_data()
@@ -148,13 +156,24 @@ class PostTest extends TestCase
     public function test_destroy_valid_post()
     {
         // Arrange
-        $post = factory(BlogPost::class)->create();
-        $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
+        $post = $this->createPost();
+        $this->assertDatabaseHas(self::POST_TABLE, ['id' => $post->id]);
+        // Act
+        $response = $this->actingAs($post->user)->delete(route('posts.destroy', ['post' => $post->id]));
+        // Assert
+        $response->assertRedirect(route('posts.index'))->assertSessionHas('status', "Blog post #{$post->id} has been deleted successfully");
+        $this->assertSoftDeleted(self::POST_TABLE, ['id' => $post->id]);
+    }
+
+    public function test_destroy_post_by_authorized_user_returns_403()
+    {
+        // Arrange
+        $post = $this->createPost();
+        $this->assertDatabaseHas(self::POST_TABLE, ['id' => $post->id]);
         // Act
         $response = $this->actingAs($this->user())->delete(route('posts.destroy', ['post' => $post->id]));
         // Assert
-        $response->assertRedirect(route('posts.index'))->assertSessionHas('status', "Blog post #{$post->id} has been deleted successfully");
-        $this->assertSoftDeleted(self::POST_TABLE, $post->toArray());
+        $response->assertStatus(403);
     }
 
     public function test_show_post_detail_with_no_comment()
