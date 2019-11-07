@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 use App\BlogPost;
 use App\Http\Requests\StorePost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['show', 'index']);
+    }
+
     private function debugQuery($cb)
     {
         DB::connection()->enableQueryLog();
@@ -39,6 +45,8 @@ class PostController extends Controller
     public function store(StorePost $request)
     {
         $validatedData = $request->validated();
+
+        $validatedData['user_id'] = Auth::id();
 
         $post = BlogPost::create($validatedData);
 
