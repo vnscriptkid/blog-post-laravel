@@ -17,7 +17,7 @@ class HomeTest extends TestCase
     {
         $response = $this->get('/');
         $response->assertStatus(200);
-        $response->assertSeeText('Welcome to our blog post');
+        $response->assertSeeText('Welcome to Blog Post');
     }
 
     public function test_about_page_works_correctly()
