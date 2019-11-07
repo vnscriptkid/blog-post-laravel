@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('content')
     <form action="{{ route('posts.update', ['post' => $post->id]) }}" method="post">
