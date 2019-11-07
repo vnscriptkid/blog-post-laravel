@@ -153,7 +153,7 @@ class PostTest extends TestCase
         $response = $this->actingAs($this->user())->delete(route('posts.destroy', ['post' => $post->id]));
         // Assert
         $response->assertRedirect(route('posts.index'))->assertSessionHas('status', "Blog post #{$post->id} has been deleted successfully");
-        $this->assertDatabaseMissing(self::POST_TABLE, $post->toArray());
+        $this->assertSoftDeleted(self::POST_TABLE, $post->toArray());
     }
 
     public function test_show_post_detail_with_no_comment()
