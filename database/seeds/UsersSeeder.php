@@ -13,9 +13,16 @@ class UsersSeeder extends Seeder
     public function run()
     {
         $kidFound = User::where('email', 'vnscriptkid@gmail.com')->first();
+        $tom = User::where('email', 'tom@gmail.com')->first();
+
         if ($kidFound == null) {
             factory(User::class)->states(['vnscriptkid'])->create();
-            $this->command->info('`vnscriptkid` has been created as an user');
+            $this->command->info('`vnscriptkid` has been created as an admin user');
+        }
+
+        if ($tom == null) {
+            factory(User::class)->states(['tom'])->create();
+            $this->command->info('`tom` has been created as an user');
         }
 
         $usersCount = (int) $this->command->ask('How many users do you want to create', 20);

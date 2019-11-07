@@ -30,6 +30,14 @@ $factory->define(User::class, function (Faker $faker) {
 $factory->state(User::class, 'vnscriptkid', function () {
     return [
         'name' => 'Thanh Nguyen',
-        'email' => 'vnscriptkid@gmail.com'
+        'email' => 'vnscriptkid@gmail.com',
+        'is_admin' => true
+    ];
+});
+
+$factory->state(User::class, 'tom', function () {
+    return [
+        'name' => 'Tom Hank',
+        'email' => 'tom@gmail.com',
     ];
 });
