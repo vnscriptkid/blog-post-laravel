@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Scopes\LatestScope;
+// use App\Scopes\LatestScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,7 +17,7 @@ class BlogPost extends Model
     // SELECT * FROM comments WHERE blog_post_id = X
     public function comments()
     {
-        return $this->hasMany('App\Comment');
+        return $this->hasMany('App\Comment')->latest();
     }
 
     // find the user by whom the post is created
