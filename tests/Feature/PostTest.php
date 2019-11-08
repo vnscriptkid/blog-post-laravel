@@ -180,8 +180,8 @@ class PostTest extends TestCase
     public function test_show_post_detail_with_no_comment()
     {
         // Arrange
-        $post = factory(BlogPost::class)->create();
-        $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
+        $post = $this->createPost();
+        $this->assertDatabaseHas(self::POST_TABLE, ['id' => $post->id]);
         // Act
         $response = $this->get(route('posts.show', ['post' => $post->id]));
         // Assert
@@ -192,9 +192,8 @@ class PostTest extends TestCase
     public function test_show_post_detail_with_multiple_comments()
     {
         // Arrange
-        $post = factory(BlogPost::class)->create();
+        $post = $this->createPost();
         $comments = factory(Comment::class, 2)->create(['blog_post_id' => $post->id]);
-
         // Act
         $response = $this->get(route('posts.show', ['post' => $post->id]));
         // Assert
@@ -208,11 +207,12 @@ class PostTest extends TestCase
         // Arrange
         $user = $this->user();
         $post = $this->createPost($user);
+        $this->assertDatabaseHas(self::POST_TABLE, ['id' => $post->id]);
         // Act
         $response = $this->get(route('posts.index'));
         // Assert
         $response->assertStatus(200);
-        $response->assertSee("{$user->name}");
+        $response->assertSee($user->name);
     }
 
     public function test_detail_page_for_author_should_include_edit_and_delete_buttons()
