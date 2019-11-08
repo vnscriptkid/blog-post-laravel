@@ -8,7 +8,15 @@
             @badge(['show' => (new Carbon\Carbon())->diffInMinutes($post->created_at) < 10])
                 New Post !
             @endbadge
-            <p>Created {{ $post->created_at->diffForHumans() }}</p>
+            @updated(['time' => $post->created_at->diffForHumans(), 'user' => $post->user->name])
+            @endupdated
+            @updated([
+                'show' => $post->created_at->lt($post->updated_at),
+                'time' => $post->updated_at->diffForHumans(),
+                ])
+                updated
+            @endupdated
+
         {{-- end of created time --}}
         <p>{{ $post->content }}</p>
 
@@ -35,7 +43,9 @@
             <ul>
                 @foreach ($post->comments as $comment)
                     <li>{{ $comment->content }}</li>
-                    <span class="text-muted">created at {{ $comment->created_at->diffForHumans() }}</span>
+                    {{-- <span class="text-muted">created at {{ $comment->created_at->diffForHumans() }}</span> --}}
+                    @updated(['time' => $comment->created_at->diffForHumans()])
+                    @endupdated
                 @endforeach
             </ul>
         @else

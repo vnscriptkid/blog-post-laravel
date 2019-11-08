@@ -9,7 +9,7 @@
             @foreach ($posts as $post)
                 <div>
                     <h2>Post #{{ $post->id }} </h2>
-                    {{-- created time of post --}}
+                    {{-- created time --}}
                         {{-- [REF] --}}
                         {{-- @component('components.badge', ['type' => 'danger'])
                             New Post
@@ -17,7 +17,10 @@
                         @badge(['type' => 'danger', 'show'=>($post->created_at->diffInMinutes() < 10)])
                             New Post!
                         @endbadge
-                        <p>by <strong> {{ $post->user->name }} </strong>, {{ $post->created_at->diffForHumans() }}</p>
+
+                        {{-- time and who --}}
+                        @updated(['time' => $post->created_at->diffForHumans(), 'user' => $post->user->name])
+                        @endupdated
                     {{-- end of created time --}}
 
                     {{-- comments count --}}
