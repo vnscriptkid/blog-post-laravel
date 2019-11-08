@@ -40,7 +40,11 @@ class PostController extends Controller
     {
         // $posts = BlogPost::withCount('comments')->orderBy('created_at', 'desc')->get();
         $posts = BlogPost::latest()->withCount('comments')->get();
-        return view('posts.index', ['posts' => $posts]);
+        $mostCommented = BlogPost::mostCommented()->take(5)->withCount('comments')->get();
+        return view('posts.index', [
+            'posts' => $posts,
+            'mostCommented' => $mostCommented
+        ]);
     }
 
     public function show($id)

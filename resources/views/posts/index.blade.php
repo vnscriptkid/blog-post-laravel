@@ -2,22 +2,42 @@
 
 @section('content')
 @if (count($posts) > 0)
-    <h1 class="text-center">See all the posts</h1>
-    <hr>
-    @foreach ($posts as $post)
-        <div>
-            <h2>Post #{{ $post->id }} </h2>
-            <p>by <strong> {{ $post->user->name }} </strong>, {{ $post->created_at->diffForHumans() }}</p>
-            @if ($post->comments_count > 0)
-                <span class="text-muted">{{ $post->comments_count }} comments</span>
-            @else
-                <span class="text-muted">No comment yet</span>
-            @endif
-            <h3>{{ $post->title }}</h3>
-            <a href="{{ route('posts.show', ['post' => $post->id]) }}">See details</a>
+    <div class="row">
+        <div class="col col-md-8">
+            <h1 class="text-center">See all the posts</h1>
             <hr>
+            @foreach ($posts as $post)
+                <div>
+                    <h2>Post #{{ $post->id }} </h2>
+                    <p>by <strong> {{ $post->user->name }} </strong>, {{ $post->created_at->diffForHumans() }}</p>
+                    @if ($post->comments_count > 0)
+                        <span class="text-muted">{{ $post->comments_count }} comments</span>
+                    @else
+                        <span class="text-muted">No comment yet</span>
+                    @endif
+                    <h3>{{ $post->title }}</h3>
+                    <a href="{{ route('posts.show', ['post' => $post->id]) }}">See details</a>
+                    <hr>
+                </div>
+            @endforeach
         </div>
-    @endforeach
+        <div class="col col-md-4">
+            <h4 class="text-center">See hottest blog posts</h4>
+            @foreach ($mostCommented as $post)
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ route('posts.show', ['post' => $post->id ]) }}">
+                                {{ $post->title }}
+                            </a>
+                        </h5>
+                        <p class="card-text">{{ $post->comments_count }} comments</p>
+                    </div>
+                </div>
+                <hr>
+            @endforeach
+        </div>
+    </div>
 @else
     <p class="lead">There no posts found</p>
 @endif

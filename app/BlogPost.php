@@ -32,6 +32,11 @@ class BlogPost extends Model
         return $builder->orderBy('created_at', 'desc');
     }
 
+    public function scopeMostCommented(Builder $query)
+    {
+        return $query->withCount('comments')->orderBy('comments_count', 'desc');
+    }
+
     public static function boot()
     {
         parent::boot();
