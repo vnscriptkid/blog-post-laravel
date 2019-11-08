@@ -43,10 +43,12 @@ class PostController extends Controller
         $posts = BlogPost::latest()->withCount('comments')->get();
         $mostCommented = BlogPost::mostCommented()->take(3)->get();
         $topUsers = User::hasMostPosts()->take(3)->get();
+        $mostActiveLastMonth = User::hasMostPostsLastMonth()->take(3)->get();
         return view('posts.index', [
             'posts' => $posts,
             'mostCommented' => $mostCommented,
-            'topUsers' => $topUsers
+            'topUsers' => $topUsers,
+            'mostActiveLastMonth' => $mostActiveLastMonth
         ]);
     }
 

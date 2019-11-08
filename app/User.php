@@ -47,4 +47,14 @@ class User extends Authenticatable
     {
         return $builder->withCount('blogPosts')->orderBy('blog_posts_count', 'desc');
     }
+
+    public function scopeHasMostPostsLastMonth(Builder $builder)
+    {
+        return $builder->withCount(['blogPosts' => function (Builder $query) {
+            return $query->whereBetween(static::CREATED_AT, [now()->subMonths(1), now()]);
+        }])
+            // ->having('blog_posts_count', '>=', 2)
+            // ->has('blogPosts', '>=', 2)
+            ->orderBy('blog_posts_count', 'desc');
+    }
 }
