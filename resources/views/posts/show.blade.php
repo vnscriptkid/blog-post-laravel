@@ -5,13 +5,10 @@
         <h1>See single post #{{ $post->id }}</h1>
         <h3>{{ $post->title }}</h3>
         {{-- created time --}}
-        @if ((new Carbon\Carbon())->diffInMinutes($post->created_at) < 5)
-            @component('badge')
-                New Post!
-            @endcomponent
-        @else
+            @badge(['show' => (new Carbon\Carbon())->diffInMinutes($post->created_at) < 10])
+                New Post !
+            @endbadge
             <p>Created {{ $post->created_at->diffForHumans() }}</p>
-        @endif
         {{-- end of created time --}}
         <p>{{ $post->content }}</p>
 

@@ -10,12 +10,14 @@
                 <div>
                     <h2>Post #{{ $post->id }} </h2>
                     {{-- created time of post --}}
-                    @if ($post->created_at->diffInMinutes() < 10)
-                        @component('badge', ['type' => 'danger'])
+                        {{-- [REF] --}}
+                        {{-- @component('components.badge', ['type' => 'danger'])
+                            New Post
+                        @endcomponent --}}
+                        @badge(['type' => 'danger', 'show'=>($post->created_at->diffInMinutes() < 10)])
                             New Post!
-                        @endcomponent
-                    @endif
-                    <p>by <strong> {{ $post->user->name }} </strong>, {{ $post->created_at->diffForHumans() }}</p>
+                        @endbadge
+                        <p>by <strong> {{ $post->user->name }} </strong>, {{ $post->created_at->diffForHumans() }}</p>
                     {{-- end of created time --}}
 
                     {{-- comments count --}}
