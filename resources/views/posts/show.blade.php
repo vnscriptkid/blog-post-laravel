@@ -23,17 +23,19 @@
 
         {{-- author actions --}}
         <div>
-            @can('update', $post)
-                <a class="btn btn-warning" href="{{ route('posts.edit', ['post' => $post->id]) }}">Edit</a>
-            @endcan
+            @auth
+                @can('update', $post)
+                    <a class="btn btn-warning" href="{{ route('posts.edit', ['post' => $post->id]) }}">Edit</a>
+                @endcan
 
-            @can('delete', $post)
-                <form class="d-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            @endcan
+                @can('delete', $post)
+                    <form class="d-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                @endcan
+            @endauth
         </div>
         {{-- end of author actions --}}
 
