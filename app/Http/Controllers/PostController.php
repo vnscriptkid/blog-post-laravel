@@ -40,7 +40,7 @@ class PostController extends Controller
     public function index()
     {
         // $posts = BlogPost::withCount('comments')->orderBy('created_at', 'desc')->get();
-        $posts = BlogPost::latest()->withCount('comments')->get();
+        $posts = BlogPost::latest()->withCount('comments')->with('user')->get();
         $mostCommented = BlogPost::mostCommented()->take(3)->get();
         $topUsers = User::hasMostPosts()->take(3)->get();
         $mostActiveLastMonth = User::hasMostPostsLastMonth()->take(3)->get();
