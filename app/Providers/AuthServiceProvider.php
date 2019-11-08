@@ -13,7 +13,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Model' => 'App\Policies\ModelPolicy',
+        'App\BlogPost' => 'App\Policies\BlogPostPolicy'
     ];
 
     /**
@@ -33,8 +34,11 @@ class AuthServiceProvider extends ServiceProvider
         //     return $user->id == $post->user_id;
         // });
 
-        Gate::define('posts.update', 'App\Policies\BlogPostPolicy@update');
-        Gate::define('posts.delete', 'App\Policies\BlogPostPolicy@delete');
+        // 1 way
+        // Gate::define('posts.update', 'App\Policies\BlogPostPolicy@update');
+        // Gate::define('posts.delete', 'App\Policies\BlogPostPolicy@delete');
+
+        // another way
         // Gate::resource('posts', 'App\Policies\BlogPostPolicy');
 
         Gate::before(function ($user, $ability) {

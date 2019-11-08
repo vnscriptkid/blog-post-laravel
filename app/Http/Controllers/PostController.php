@@ -59,7 +59,7 @@ class PostController extends Controller
     {
         $post = BlogPost::findOrFail($id);
 
-        $this->authorize('posts.update', $post);
+        $this->authorize('update', $post);
 
         return view('posts.edit', ['post' => $post]);
     }
@@ -72,7 +72,7 @@ class PostController extends Controller
         //     abort(403, 'You can not edit this post');
         // }
 
-        $this->authorize('posts.update', $post);
+        $this->authorize('update', $post);
 
         $validatedData = $request->validated();
 
@@ -87,7 +87,7 @@ class PostController extends Controller
     {
         $post = BlogPost::findOrFail($id);
 
-        $this->authorize('posts.delete', $post);
+        $this->authorize('delete', $post);
 
         $post->delete();
 
