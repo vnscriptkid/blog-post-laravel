@@ -15,6 +15,11 @@ abstract class TestCase extends BaseTestCase
         return factory(User::class)->create();
     }
 
+    protected function admin()
+    {
+        return factory(User::class)->states(['vnscriptkid'])->create();
+    }
+
     protected function createPost(User $user = null)
     {
         if (!$user instanceof User) {
