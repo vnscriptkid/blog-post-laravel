@@ -2,7 +2,8 @@
 
 @section('content')
 @if (count($posts) > 0)
-    <h1>See all the posts</h1>
+    <h1 class="text-center">See all the posts</h1>
+    <hr>
     @foreach ($posts as $post)
         <div>
             <h2>Post #{{ $post->id }} </h2>
