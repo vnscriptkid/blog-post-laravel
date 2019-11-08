@@ -29,6 +29,7 @@
             <ul>
                 @foreach ($post->comments as $comment)
                     <li>{{ $comment->content }}</li>
+                    <span class="text-muted">created at {{ $comment->created_at->diffForHumans() }}</span>
                 @endforeach
             </ul>
         @else
