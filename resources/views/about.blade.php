@@ -1,8 +1,12 @@
 @extends('layouts.app')
 
+
 @section('content')
 <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
-        <h1 class="bd-title" id="content">About</h1>
+    <h1 class="bd-title" id="content">About</h1>
+    @can('view.secret')
+        <a href="{{ route('secret') }}">Only admin can see this! Go next</a>
+    @endcan
         <p class="bd-lead">Learn more about the team maintaining Bootstrap, how and why the project started, and how to get involved.</p>
 
         <h2 id="team"><span class="bd-content-title">Team<a class="anchorjs-link " href="#team" aria-label="Anchor" data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></span></h2>

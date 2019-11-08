@@ -24,4 +24,9 @@ class HomeController extends Controller
     {
         return view('about');
     }
+
+    public function secret()
+    {
+        return view('secret');
+    }
 }

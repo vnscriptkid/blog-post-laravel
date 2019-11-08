@@ -19,3 +19,4 @@ Route::resource('posts', 'PostController');
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/about', 'HomeController@about')->name('about');
+Route::get('/secret', 'HomeController@secret')->name('secret')->middleware('can:view.secret');
