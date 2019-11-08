@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Scopes\LatestScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -26,11 +27,16 @@ class BlogPost extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function scopeLatest(Builder $builder)
+    {
+        return $builder->orderBy('created_at', 'desc');
+    }
+
     public static function boot()
     {
         parent::boot();
 
-        static::addGlobalScope(new LatestScope);
+        // static::addGlobalScope(new LatestScope);
 
         static::deleting(function (BlogPost $blogPost) {
             $blogPost->comments()->delete();
