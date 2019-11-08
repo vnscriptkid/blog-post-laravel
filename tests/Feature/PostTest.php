@@ -212,4 +212,28 @@ class PostTest extends TestCase
         $response->assertStatus(200);
         $response->assertSeeText("by {$user->name}");
     }
+
+    public function test_detail_page_for_author_should_include_edit_and_delete_buttons()
+    {
+        // Arrange
+        $post = $this->createPost();
+        // Act
+        $response = $this->actingAs($post->user)->get(route('posts.show', ['post' => $post->id]));
+        // Assert
+        $response->assertStatus(200);
+        $response->assertSeeText('Edit');
+        $response->assertSeeText('Delete');
+    }
+
+    public function test_detail_page_for_normal_user_should_not_include_edit_and_delete_buttons()
+    {
+        // Arrange
+        $post = $this->createPost();
+        // Act
+        $response = $this->actingAs($this->user())->get(route('posts.show', ['post' => $post->id]));
+        // Assert
+        $response->assertStatus(200);
+        $response->assertDontSeeText('Edit');
+        $response->assertDontSeeText('Delete');
+    }
 }
