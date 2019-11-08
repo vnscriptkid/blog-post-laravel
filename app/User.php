@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -40,5 +41,10 @@ class User extends Authenticatable
     public function blogPosts()
     {
         return $this->hasMany('App\BlogPost');
+    }
+
+    public function scopeHasMostPosts(Builder $builder)
+    {
+        return $builder->withCount('blogPosts')->orderBy('blog_posts_count', 'desc');
     }
 }

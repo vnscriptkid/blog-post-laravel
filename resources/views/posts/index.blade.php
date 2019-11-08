@@ -22,6 +22,23 @@
             @endforeach
         </div>
         <div class="col col-md-4">
+            <h4 class="text-center">Top Users</h4>
+            <table class="table">
+                <thead>
+                    <th scope="col">Ranked</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Posts</th>
+                </thead>
+                <tbody>
+                    @foreach ($topUsers as $key => $user)
+                        <tr>
+                            <th scope="row">#{{ $key + 1 }}</th>
+                            <th>{{ $user->name }}</th>
+                            <th>{{ $user->blog_posts_count }}</th>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
             <h4 class="text-center">See hottest blog posts</h4>
             @foreach ($mostCommented as $post)
                 <div class="card">
