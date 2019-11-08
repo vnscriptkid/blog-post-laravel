@@ -7,7 +7,7 @@
     @foreach ($posts as $post)
         <div>
             <h2>Post #{{ $post->id }} </h2>
-            <p>by {{ $post->user->name }}</p>
+            <p>by <strong> {{ $post->user->name }} </strong>, {{ $post->created_at->diffForHumans() }}</p>
             @if ($post->comments_count > 0)
                 <span class="text-muted">{{ $post->comments_count }} comments</span>
             @else
