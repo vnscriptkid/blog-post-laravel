@@ -9,12 +9,23 @@
             @foreach ($posts as $post)
                 <div>
                     <h2>Post #{{ $post->id }} </h2>
+                    {{-- created time of post --}}
+                    @if ($post->created_at->diffInMinutes() < 10)
+                        @component('badge', ['type' => 'danger'])
+                            New Post!
+                        @endcomponent
+                    @endif
                     <p>by <strong> {{ $post->user->name }} </strong>, {{ $post->created_at->diffForHumans() }}</p>
+                    {{-- end of created time --}}
+
+                    {{-- comments count --}}
                     @if ($post->comments_count > 0)
                         <span class="text-muted">{{ $post->comments_count }} comments</span>
                     @else
                         <span class="text-muted">No comment yet</span>
                     @endif
+                    {{-- end of comments count --}}
+
                     <h3>{{ $post->title }}</h3>
                     <a href="{{ route('posts.show', ['post' => $post->id]) }}">See details</a>
                     <hr>
