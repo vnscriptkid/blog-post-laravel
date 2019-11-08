@@ -57,7 +57,8 @@ class PostController extends Controller
     {
         $validatedData = $request->validated();
 
-        $validatedData['user_id'] = Auth::id();
+        // $validatedData['user_id'] = Auth::id();
+        $validatedData['user_id'] = $request->user()->id;
 
         $post = BlogPost::create($validatedData);
 
