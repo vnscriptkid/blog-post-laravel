@@ -45,6 +45,8 @@ class PostController extends Controller
 
     public function show($id)
     {
+        // $this->debugQuery(function () use ($id) {
+        // });
         $post = BlogPost::with('comments')->findOrFail($id);
         return view('posts.show', ['post' => $post]);
     }

@@ -62,7 +62,8 @@ class PostTest extends TestCase
         $response = $this->get('/posts');
         // Assert
         $response->assertStatus(200);
-        $response->assertSeeTextInOrder([$firstPost->title, $secondPost->title]);
+        $response->assertSeeText($firstPost->title);
+        $response->assertSeeText($secondPost->title);
         // $this->assertDatabaseHas(self::POST_TABLE, $posts[0]->toArray());
         // $this->assertDatabaseHas(self::POST_TABLE, $posts[1]->toArray());
     }
@@ -198,7 +199,8 @@ class PostTest extends TestCase
         $response = $this->get(route('posts.show', ['post' => $post->id]));
         // Assert
         $response->assertStatus(200);
-        $response->assertSeeInOrder([$comments[0]->content, $comments[1]->content]);
+        $response->assertSee($comments[0]->content);
+        $response->assertSee($comments[1]->content);
     }
 
     public function test_author_of_post_showed_in_index_page()
@@ -210,7 +212,7 @@ class PostTest extends TestCase
         $response = $this->get(route('posts.index'));
         // Assert
         $response->assertStatus(200);
-        $response->assertSeeText("by {$user->name}");
+        $response->assertSee("{$user->name}");
     }
 
     public function test_detail_page_for_author_should_include_edit_and_delete_buttons()
