@@ -2,6 +2,7 @@
 
 use App\BlogPost;
 use App\Comment;
+use App\User;
 use Illuminate\Database\Seeder;
 
 class CommentsSeeder extends Seeder
@@ -20,16 +21,19 @@ class CommentsSeeder extends Seeder
         }
 
         $posts = BlogPost::all();
-        $postsCount = $posts->count();
+        $users = User::all();
 
-        if ($postsCount > 0) {
-            factory(Comment::class, $commentsCount)->make()->each(function ($comment) use ($posts) {
-                $comment->blog_post_id = $posts->random()->id;
-                $comment->save();
-            });
-            $this->command->info("{$commentsCount} comments has been created successfully");
-        } else {
-            $this->command->error("No comment has been created as no post existed");
+        if ($posts->count() === 0 || $users->count() === 0) {
+            $this->command->error("No comment has been created as no post or user existed");
+            return;
         }
+
+        factory(Comment::class, $commentsCount)->make()->each(function ($comment) use ($posts, $users) {
+            $comment->blog_post_id = $posts->random()->id;
+            $comment->user_id = $users->random()->id;
+            $comment->save();
+        });
+
+        $this->command->info("{$commentsCount} comments has been created successfully");
     }
 }
