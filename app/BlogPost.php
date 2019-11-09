@@ -28,6 +28,13 @@ class BlogPost extends Model
         return $this->belongsTo('App\User');
     }
 
+    // find all tags of the post
+    // SELECT * FROM blog_post_tag WHERE blog_post_id = X
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag');
+    }
+
     public function scopeLatest(Builder $builder)
     {
         return $builder->orderBy('created_at', 'desc');
