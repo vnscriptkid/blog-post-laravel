@@ -42,7 +42,7 @@ class PostController extends Controller
     {
         // dd(session()->getId());
         // $posts = BlogPost::withCount('comments')->orderBy('created_at', 'desc')->get();
-        $posts = BlogPost::latest()->withCount('comments')->with('user')->get();
+        $posts = BlogPost::latest()->withCount('comments')->with('user')->with('tags')->get();
 
         $mostCommented = Cache::remember('most-commented', now()->addSeconds(60), function () {
             return BlogPost::mostCommented()->take(3)->get();
@@ -87,10 +87,13 @@ class PostController extends Controller
         //     return $query->latest();
         // }])->findOrFail($id);
         $post = Cache::remember("post-{$id}", now()->addSeconds(20), function () use ($id) {
-            return BlogPost::with('comments')->with('user')->findOrFail($id);
+            return BlogPost::with('comments')->with('user')->with('tags')->findOrFail($id);
         });
 
-        return view('posts.show', ['post' => $post, 'currentlyReading' => count($readers)]);
+        return view('posts.show', [
+            'post' => $post,
+            'currentlyReading' => count($readers),
+        ]);
     }
 
     public function create()
