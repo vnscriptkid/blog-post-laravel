@@ -32,7 +32,7 @@ class BlogPost extends Model
     // SELECT * FROM blog_post_tag WHERE blog_post_id = X
     public function tags()
     {
-        return $this->belongsToMany('App\Tag');
+        return $this->belongsToMany('App\Tag')->withTimestamps();
     }
 
     public function scopeLatest(Builder $builder)
