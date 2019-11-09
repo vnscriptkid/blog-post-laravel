@@ -20,13 +20,17 @@ class DatabaseSeeder extends Seeder
             DB::table('comments')->delete();
             DB::table('blog_posts')->delete();
             DB::table('users')->delete();
+            DB::table('tags')->delete();
+            DB::table('blog_post_tag')->delete();
         }
 
         // start seeding
         $this->call([
             UsersSeeder::class,
             PostsSeeder::class,
-            CommentsSeeder::class
+            CommentsSeeder::class,
+            TagsSeeder::class,
+            PostTagSeeder::class
         ]);
     }
 }
