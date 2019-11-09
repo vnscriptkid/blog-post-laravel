@@ -1,5 +1,7 @@
 <h4>
     @foreach ($tags as $tag)
-    <span class="badge badge-warning">{{ $tag->name }}</span>
+    <a href="{{ route('posts.tag.index', ['tag' => $tag->id]) }}">
+        <span class="badge badge-warning">{{ $tag->name }}</span>
+    </a>
     @endforeach
 </h4>
