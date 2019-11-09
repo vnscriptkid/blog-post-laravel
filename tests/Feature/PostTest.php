@@ -193,7 +193,7 @@ class PostTest extends TestCase
     {
         // Arrange
         $post = $this->createPost();
-        $comments = factory(Comment::class, 2)->create(['blog_post_id' => $post->id]);
+        $comments = factory(Comment::class, 2)->create(['blog_post_id' => $post->id, 'user_id' => $this->user()->id]);
         // Act
         $response = $this->get(route('posts.show', ['post' => $post->id]));
         // Assert
