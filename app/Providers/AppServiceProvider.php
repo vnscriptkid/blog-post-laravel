@@ -30,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.tags', 'tags');
 
         // run composer before view is rendered
-        view()->composer('posts.index', ActivityComposer::class);
+        view()->composer(['posts._activity'], ActivityComposer::class);
     }
 }
