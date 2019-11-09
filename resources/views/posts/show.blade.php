@@ -52,8 +52,10 @@
                     @foreach ($post->comments as $comment)
                         <li>{{ $comment->content }}</li>
                         {{-- <span class="text-muted">created at {{ $comment->created_at->diffForHumans() }}</span> --}}
-                        @updated(['time' => $comment->created_at->diffForHumans()])
-                        @endupdated
+                        @updated([
+                            'time' => $comment->created_at->diffForHumans(),
+                            'user' => $comment->user->name
+                        ])@endupdated
                     @endforeach
                 </ul>
             @else
