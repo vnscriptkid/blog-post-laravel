@@ -44,23 +44,8 @@ class PostController extends Controller
         // $posts = BlogPost::withCount('comments')->orderBy('created_at', 'desc')->get();
         $posts = BlogPost::latest()->withCount('comments')->with('user')->with('tags')->get();
 
-        $mostCommented = Cache::remember('most-commented', now()->addSeconds(60), function () {
-            return BlogPost::mostCommented()->take(3)->get();
-        });
-
-        $topUsers = Cache::remember('top-users', now()->addSeconds(60), function () {
-            return User::hasMostPosts()->take(3)->get();
-        });
-
-        $mostActiveLastMonth = Cache::remember('most-active-last-month', now()->addSeconds(60), function () {
-            return User::hasMostPostsLastMonth()->take(3)->get();
-        });
-
         return view('posts.index', [
-            'posts' => $posts,
-            'mostCommented' => $mostCommented,
-            'topUsers' => $topUsers,
-            'mostActiveLastMonth' => $mostActiveLastMonth
+            'posts' => $posts
         ]);
     }
 

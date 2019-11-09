@@ -14,9 +14,6 @@ class PostTagController extends Controller
 
         return view('posts.index', [
             'posts' => $posts,
-            'mostCommented' => [],
-            'topUsers' => [],
-            'mostActiveLastMonth' => []
         ]);
     }
 }
