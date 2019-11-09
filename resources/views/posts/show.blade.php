@@ -4,7 +4,9 @@
     <div>
         <h1>See single post #{{ $post->id }}</h1>
         <h3>{{ $post->title }}</h3>
-        {{-- created time --}}
+            @tags(['tags' => $post->tags ])
+            @endtags
+            {{-- created time --}}
             @badge(['show' => (new Carbon\Carbon())->diffInMinutes($post->created_at) < 10])
                 New Post !
             @endbadge

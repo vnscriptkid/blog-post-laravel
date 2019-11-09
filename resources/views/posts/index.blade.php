@@ -32,6 +32,7 @@
                     {{-- end of comments count --}}
 
                     <h3>{{ $post->title }}</h3>
+                    @tags(['tags' => $post->tags])@endtags
                     <a href="{{ route('posts.show', ['post' => $post->id]) }}">See details</a>
                     <hr>
                 </div>
