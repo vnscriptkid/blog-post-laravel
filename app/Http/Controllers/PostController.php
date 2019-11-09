@@ -7,6 +7,7 @@ use App\Http\Requests\StorePost;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -39,11 +40,22 @@ class PostController extends Controller
 
     public function index()
     {
+        // dd(session()->getId());
         // $posts = BlogPost::withCount('comments')->orderBy('created_at', 'desc')->get();
         $posts = BlogPost::latest()->withCount('comments')->with('user')->get();
-        $mostCommented = BlogPost::mostCommented()->take(3)->get();
-        $topUsers = User::hasMostPosts()->take(3)->get();
-        $mostActiveLastMonth = User::hasMostPostsLastMonth()->take(3)->get();
+
+        $mostCommented = Cache::remember('most-commented', now()->addSeconds(60), function () {
+            return BlogPost::mostCommented()->take(3)->get();
+        });
+
+        $topUsers = Cache::remember('top-users', now()->addSeconds(60), function () {
+            return User::hasMostPosts()->take(3)->get();
+        });
+
+        $mostActiveLastMonth = Cache::remember('most-active-last-month', now()->addSeconds(60), function () {
+            return User::hasMostPostsLastMonth()->take(3)->get();
+        });
+
         return view('posts.index', [
             'posts' => $posts,
             'mostCommented' => $mostCommented,
@@ -54,12 +66,31 @@ class PostController extends Controller
 
     public function show($id)
     {
+        // Calculate # of current readers
+        $currentSession = session()->getId();
+        $readers = Cache::get("post-{$id}-readers", []);
+        $now = now();
+
+        $readers[$currentSession] = $now;
+
+        foreach ($readers as $readerSession => $lastVisitTime) {
+            // expired session
+            if ($now->diffInMinutes($lastVisitTime) > 1) {
+                unset($readers[$readerSession]);
+            }
+        }
+
+        // save readers
+        Cache::forever("post-{$id}-readers", $readers);
+
         // $post = BlogPost::with(['comments' => function ($query) {
         //     return $query->latest();
         // }])->findOrFail($id);
-        $post = BlogPost::with('comments')->findOrFail($id);
+        $post = Cache::remember("post-{$id}", now()->addSeconds(20), function () use ($id) {
+            return BlogPost::with('comments')->with('user')->findOrFail($id);
+        });
 
-        return view('posts.show', ['post' => $post]);
+        return view('posts.show', ['post' => $post, 'currentlyReading' => count($readers)]);
     }
 
     public function create()

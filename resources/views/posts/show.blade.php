@@ -39,6 +39,9 @@
         </div>
         {{-- end of author actions --}}
 
+        {{-- how many people is reading this post --}}
+        <span class="badge badge-info">{{ $currentlyReading }} people is reading</span>
+
         <hr>
         <h2>Comments</h2>
         @if (count($post->comments))
