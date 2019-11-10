@@ -14,7 +14,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
-        'App\BlogPost' => 'App\Policies\BlogPostPolicy'
+        'App\BlogPost' => 'App\Policies\BlogPostPolicy',
+        'App\User' => 'App\Policies\UserPolicy'
     ];
 
     /**
@@ -24,6 +25,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        Gate::before(function ($user, $ability) {
+            if ($user->is_admin) {
+                return true;
+            }
+        });
+
         $this->registerPolicies();
 
         Gate::define('view.secret', function ($user) {
@@ -45,10 +53,5 @@ class AuthServiceProvider extends ServiceProvider
         // another way
         // Gate::resource('posts', 'App\Policies\BlogPostPolicy');
 
-        Gate::before(function ($user, $ability) {
-            if ($user->is_admin && in_array($ability, ['update-post', 'delete-post'])) {
-                return true;
-            }
-        });
     }
 }

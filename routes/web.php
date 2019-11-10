@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 Auth::routes();
 
 Route::resource('posts', 'PostController');
+Route::resource('users', 'UserController')->only(['update', 'edit', 'show']);
 
 Route::get('/posts/tag/{tag}', 'PostTagController@index')->name('posts.tag.index');
 
