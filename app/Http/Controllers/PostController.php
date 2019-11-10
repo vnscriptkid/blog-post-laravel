@@ -42,7 +42,7 @@ class PostController extends Controller
     {
         // dd(session()->getId());
         // $posts = BlogPost::withCount('comments')->orderBy('created_at', 'desc')->get();
-        $posts = BlogPost::latest()->withCount('comments')->with('user')->with('tags')->get();
+        $posts = BlogPost::latestWithRelations()->get();
 
         return view('posts.index', [
             'posts' => $posts

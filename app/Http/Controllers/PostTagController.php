@@ -14,9 +14,7 @@ class PostTagController extends Controller
 
         $posts = Cache::remember("posts-tag-{$tag->id}", now()->addSeconds(20), function () use ($tag) {
             return $tag->blogPosts()
-                ->latest()
-                ->withCount('comments')
-                ->with(['user', 'tags'])
+                ->latestWithRelations()
                 ->get();
         });
 

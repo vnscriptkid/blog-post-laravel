@@ -45,6 +45,13 @@ class BlogPost extends Model
         return $query->withCount('comments')->orderBy('comments_count', 'desc');
     }
 
+    public function scopeLatestWithRelations(Builder $builder)
+    {
+        return $builder->latest()
+            ->withCount('comments')
+            ->with(['user', 'tags']);
+    }
+
     public static function boot()
     {
         parent::boot();
