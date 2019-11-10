@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUser;
+use App\Image;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -73,10 +76,28 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUser $request, User $user)
     {
         $this->authorize('update', $user);
-        dd($user->toArray());
+        $request->validated();
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('userImages');
+
+            if ($user->image) {
+                // delete the old
+                Storage::delete($user->image->path);
+                // save new one
+                $user->image->path = $path;
+                $user->image->save();
+            } else {
+                $user->image()->save(Image::make([
+                    'path' => $path
+                ]));
+            }
+        }
+
+        return redirect()->back();
     }
 
     /**
