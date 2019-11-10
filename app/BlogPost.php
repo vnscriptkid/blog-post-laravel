@@ -32,7 +32,8 @@ class BlogPost extends Model
     // SELECT * FROM images WHERE blog_post_id = X LIMIT 1
     public function image()
     {
-        return $this->hasOne('App\Image');
+        // return $this->hasOne('App\Image');
+        return $this->morphOne('App\Image', 'imageable');
     }
 
     // find all tags of the post
