@@ -72,9 +72,7 @@ class PostController extends Controller
         //     return $query->latest();
         // }])->findOrFail($id);
         $post = Cache::remember("post-{$id}", now()->addSeconds(20), function () use ($id) {
-            return BlogPost::with(['comments' => function ($builder) {
-                return $builder->with('user');
-            }])->with('user')->with('tags')->findOrFail($id);
+            return BlogPost::with(['comments', 'user', 'tags', 'comments.user'])->findOrFail($id);
         });
 
         return view('posts.show', [
