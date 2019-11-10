@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\BlogPost;
 use App\Http\Requests\StorePost;
+use App\Image;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 // $ability maps $method controller
 // [
@@ -92,8 +94,17 @@ class PostController extends Controller
 
         // $validatedData['user_id'] = Auth::id();
         $validatedData['user_id'] = $request->user()->id;
-
         $post = BlogPost::create($validatedData);
+
+        // save post image to disk: random_name.ext
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('postImages');
+            $post->image()->save(Image::create([
+                'path' => $path
+            ]));
+        }
+
+        // $file->storeAs('postImages', $post->id . '.' . $file->guessExtension());
 
         $request->session()->flash('status', 'Blog post has been created successfully');
         return redirect()->route('posts.show', ['post' => $post->id]);
@@ -119,6 +130,21 @@ class PostController extends Controller
         $this->authorize('update', $post);
 
         $validatedData = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('postImages');
+            // if image exists already, delete file & record
+            if ($post->image) {
+                Storage::delete($post->image->path);
+                $post->image->path = $path;
+                $post->image->save();
+            } else {
+                Image::create([
+                    'path' => $path,
+                    'blog_post_id' => $post->id
+                ]);
+            }
+        }
 
         $post->fill($validatedData);
         $post->save();
