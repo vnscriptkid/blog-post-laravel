@@ -47,21 +47,37 @@
 
             <hr>
             <h2>Comments</h2>
+
+            {{-- comment form --}}
+            <div class="my-2">
+                @auth
+                    @include('comments._form')
+                @else
+                    <p><a href="{{ route('login') }}">
+                        <strong>Login Now!</strong></a> to leave comments</p>
+                @endauth
+            </div>
+            <hr>
+
+            {{-- comment list --}}
             @if (count($post->comments))
                 <ul>
                     @foreach ($post->comments as $comment)
-                        <li>{{ $comment->content }}</li>
+                        <li>{{ $comment->content }}
                         {{-- <span class="text-muted">created at {{ $comment->created_at->diffForHumans() }}</span> --}}
                         @updated([
                             'time' => $comment->created_at->diffForHumans(),
                             'user' => $comment->user->name
                         ])@endupdated
+                        </li>
                     @endforeach
                 </ul>
             @else
                 <p>There's no comment yet</p>
             @endif
         </div>
+
+        {{-- activity column --}}
         <div class="col col-md-4">
             @include('posts._activity');
         </div>
