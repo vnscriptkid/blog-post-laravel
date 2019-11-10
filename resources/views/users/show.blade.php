@@ -9,12 +9,17 @@
                 @else
                     <img class="mb-3 rounded-circle" height="200px" width="200px" src="/storage/userImages/user.jpg" alt="{{ $user->name }}" />
                 @endif
-                <form action="{{ route('users.update', ['user' => Auth::id()]) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method("PUT")
-                    <input type="file" name="image" id="userImage" />
-                    <button class="btn btn-success mt-3">Update Photo</button>
-                </form>
+
+                @auth
+                    @can('update', $user)
+                        <form action="{{ route('users.update', ['user' => Auth::id()]) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method("PUT")
+                            <input type="file" name="image" id="userImage" />
+                            <button class="btn btn-success mt-3">Update Photo</button>
+                        </form>
+                    @endcan
+                @endauth
             </div>
 
 
