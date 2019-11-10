@@ -28,6 +28,13 @@ class BlogPost extends Model
         return $this->belongsTo('App\User');
     }
 
+    // find image of post
+    // SELECT * FROM images WHERE blog_post_id = X LIMIT 1
+    public function image()
+    {
+        return $this->hasOne('App\Image');
+    }
+
     // find all tags of the post
     // SELECT * FROM blog_post_tag WHERE blog_post_id = X
     public function tags()
