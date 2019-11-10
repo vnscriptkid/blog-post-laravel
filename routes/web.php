@@ -22,3 +22,5 @@ Route::get('/posts/tag/{tag}', 'PostTagController@index')->name('posts.tag.index
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/about', 'HomeController@about')->name('about');
 Route::get('/secret', 'HomeController@secret')->name('secret')->middleware('can:view.secret');
+
+Route::resource('posts.comments', 'PostCommentController')->only('store');
