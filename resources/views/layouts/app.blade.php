@@ -57,6 +57,9 @@
                             @endif
                         @else
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('users.show', ['user' => Auth::user()]) }}">{{ __('Profile') }}</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('about') }}">{{ __('About') }}</a>
                             </li>
                             <li class="nav-item">
