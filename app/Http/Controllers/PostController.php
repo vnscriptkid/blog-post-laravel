@@ -99,7 +99,7 @@ class PostController extends Controller
         // save post image to disk: random_name.ext
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('postImages');
-            $post->image()->save(Image::create([
+            $post->image()->save(Image::make([
                 'path' => $path
             ]));
         }
@@ -139,10 +139,9 @@ class PostController extends Controller
                 $post->image->path = $path;
                 $post->image->save();
             } else {
-                Image::create([
+                $post->image()->save(Image::make([
                     'path' => $path,
-                    'blog_post_id' => $post->id
-                ]);
+                ]));
             }
         }
 
