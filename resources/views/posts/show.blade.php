@@ -20,6 +20,13 @@
                     updated
                 @endupdated
 
+            {{-- post image --}}
+            @if (isset($post->image))
+                <div class="my-3">
+                    <img src="{{ $post->image->url() }}" alt="{{ $post->title }}" style="max-width:100%"/>
+                </div>
+            @endif
+
             {{-- end of created time --}}
             <p>{{ $post->content }}</p>
 
