@@ -11,7 +11,7 @@
                 @badge(['show' => (new Carbon\Carbon())->diffInMinutes($post->created_at) < 10])
                     New Post !
                 @endbadge
-                @updated(['time' => $post->created_at->diffForHumans(), 'user' => $post->user->name])
+                @updated(['time' => $post->created_at->diffForHumans(), 'userName' => $post->user->name, 'userId' => $post->user->id])
                 @endupdated
                 @updated([
                     'show' => $post->created_at->lt($post->updated_at),
@@ -67,21 +67,10 @@
             <hr>
 
             {{-- comment list --}}
-            @if (count($post->comments))
-                <ul>
-                    @foreach ($post->comments as $comment)
-                        <li>{{ $comment->content }}
-                        {{-- <span class="text-muted">created at {{ $comment->created_at->diffForHumans() }}</span> --}}
-                        @updated([
-                            'time' => $comment->created_at->diffForHumans(),
-                            'user' => $comment->user->name
-                        ])@endupdated
-                        </li>
-                    @endforeach
-                </ul>
-            @else
-                <p>There's no comment yet</p>
-            @endif
+            <div>
+                @comments(['list' => $post->comments])
+                @endcomments
+            </div>
         </div>
 
         {{-- activity column --}}

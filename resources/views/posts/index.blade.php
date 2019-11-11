@@ -19,7 +19,7 @@
                         @endbadge
 
                         {{-- time and who --}}
-                        @updated(['time' => $post->created_at->diffForHumans(), 'user' => $post->user->name])
+                        @updated(['time' => $post->created_at->diffForHumans(), 'userName' => $post->user->name, 'userId' => $post->user->id])
                         @endupdated
                     {{-- end of created time --}}
 

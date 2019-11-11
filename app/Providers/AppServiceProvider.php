@@ -30,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.badge', 'badge');
         Blade::component('components.updated', 'updated');
         Blade::component('components.tags', 'tags');
+        Blade::component('components.commentList', 'comments');
 
         // run composer before view is rendered
         view()->composer(['posts._activity'], ActivityComposer::class);
