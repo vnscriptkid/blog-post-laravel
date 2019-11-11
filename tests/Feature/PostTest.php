@@ -44,7 +44,12 @@ class PostTest extends TestCase
     {
         // Arrange
         $post = $this->createPost();
-        factory(Comment::class, 3)->create(['blog_post_id' => $post->id]);
+        factory(Comment::class, 3)->make()->each(function ($comment) use ($post) {
+            $comment->commentable_id = $post->id;
+            $comment->commentable_type = BlogPost::class;
+            $comment->user_id = $this->user()->id;
+            $comment->save();
+        });
 
         // Act
         $response = $this->get(route('posts.index'));
@@ -139,10 +144,10 @@ class PostTest extends TestCase
     public function test_update_post_with_invalid_data()
     {
         // Arrange
-        $post = factory(BlogPost::class)->create();
-        $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
+        $user = $this->user();
+        $post = $this->createPost();
         // Act
-        $response = $this->actingAs($this->user())->put(route('posts.update', ['post' => $post->id]), [
+        $response = $this->actingAs($user)->put(route('posts.update', ['post' => $post->id]), [
             'title' => 'xy',
             'content' => ''
         ]);
@@ -151,7 +156,6 @@ class PostTest extends TestCase
         $response->assertStatus(302);
         $this->assertEquals($errors['title'][0], 'The title must be at least 5 characters.');
         $this->assertEquals($errors['content'][0], 'The content field is required.');
-        $this->assertDatabaseHas(self::POST_TABLE, $post->toArray());
     }
 
     public function test_destroy_valid_post()
@@ -193,7 +197,12 @@ class PostTest extends TestCase
     {
         // Arrange
         $post = $this->createPost();
-        $comments = factory(Comment::class, 2)->create(['blog_post_id' => $post->id, 'user_id' => $this->user()->id]);
+        $comments = factory(Comment::class, 2)->make()->each(function ($comment) use ($post) {
+            $comment->commentable_id = $post->id;
+            $comment->commentable_type = BlogPost::class;
+            $comment->user_id = $this->user()->id;
+            $comment->save();
+        });
         // Act
         $response = $this->get(route('posts.show', ['post' => $post->id]));
         // Assert
