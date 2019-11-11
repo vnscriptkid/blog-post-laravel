@@ -1,5 +1,5 @@
 <?php
-
+// php artisan make:mail CommentPosted --markdown=comment-posted-on-watched
 namespace App\Mail;
 
 use App\Comment;

@@ -6,6 +6,7 @@ use App\BlogPost;
 use App\Comment;
 use App\Http\Requests\StoreComment;
 use App\Jobs\NotifyUsersPostCommented;
+use App\Jobs\ThrottleMail;
 use App\Mail\CommentPosted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,9 +57,13 @@ class PostCommentController extends Controller
         //     new CommentPosted($comment)
         // );
 
-        Mail::to($post->user)->later(
-            now()->addSeconds(10),
-            new CommentPosted($comment)
+        // Mail::to($post->user)->later(
+        //     now()->addSeconds(0),
+        //     new CommentPosted($comment)
+        // );
+        ThrottleMail::dispatch(
+            new CommentPosted($comment),
+            $post->user
         );
 
         NotifyUsersPostCommented::dispatch($comment);
