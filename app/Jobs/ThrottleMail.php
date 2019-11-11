@@ -16,6 +16,9 @@ class ThrottleMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 15;
+    public $timeout = 10;
+
     public $mailable;
     public $user;
 
@@ -41,7 +44,7 @@ class ThrottleMail implements ShouldQueue
             ->allow(5)
             ->every(60)
             ->then(function () {
-                Mail::to($this->user)->queue(
+                Mail::to($this->user)->send(
                     $this->mailable
                 );
             }, function () {

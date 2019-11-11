@@ -64,9 +64,10 @@ class PostCommentController extends Controller
         ThrottleMail::dispatch(
             new CommentPosted($comment),
             $post->user
-        );
+        )->onQueue('high');
 
-        NotifyUsersPostCommented::dispatch($comment);
+        NotifyUsersPostCommented::dispatch($comment)->onQueue('low');
+        // php artisan queue:work --tries=3 --timeout=15 --queue=high,default,low
 
         return redirect()->back();
     }
