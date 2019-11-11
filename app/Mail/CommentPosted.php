@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 // default subject "Comment Posted"
+// implements ShouldQueue
 class CommentPosted extends Mailable
 {
     use Queueable, SerializesModels;

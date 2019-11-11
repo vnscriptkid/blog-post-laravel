@@ -51,7 +51,12 @@ class PostCommentController extends Controller
             'user_id' => $request->user()->id
         ]);
 
-        Mail::to($post->user)->send(
+        // Mail::to($post->user)->queue(
+        //     new CommentPosted($comment)
+        // );
+
+        Mail::to($post->user)->later(
+            now()->addSeconds(10),
             new CommentPosted($comment)
         );
 

@@ -1,5 +1,8 @@
 <?php
-
+// php artisan queue:table
+// php artisan queue:failed-table
+// https://mailtrap.io/inboxes/435639/messages
+// php artisan queue:work --tries=3
 return [
 
     /*
@@ -13,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_CONNECTION', 'sync'),
+    'default' => env('QUEUE_CONNECTION', 'database'),
 
     /*
     |--------------------------------------------------------------------------
