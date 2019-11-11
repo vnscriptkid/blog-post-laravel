@@ -25,6 +25,12 @@ class Comment extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function commentable()
+    {
+        // comment->commentable is either a BlogPost or a User
+        return $this->morphTo();
+    }
+
     public function scopeLatest(Builder $builder)
     {
         return $builder->orderBy('created_at', 'desc');
@@ -36,7 +42,10 @@ class Comment extends Model
 
         // static::addGlobalScope(new LatestScope);
         static::creating(function (Comment $comment) {
-            Cache::forget("post-{$comment->blog_post_id}");
+            // Cache::forget("post-{$comment->blog_post_id}");
+            if ($comment->commentable_type === BlogPost::class) {
+                Cache::forget("post-{$comment->commentable_id}");
+            }
         });
     }
 }

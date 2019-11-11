@@ -18,7 +18,8 @@ class BlogPost extends Model
     // SELECT * FROM comments WHERE blog_post_id = X
     public function comments()
     {
-        return $this->hasMany('App\Comment')->latest();
+        // return $this->hasMany('App\Comment')->latest();
+        return $this->morphMany('App\Comment', 'commentable')->latest();
     }
 
     // find the user by whom the post is created

@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Comment');
     }
 
+    public function profileComments()
+    {
+        return $this->morphMany('App\Comment', 'commentable')->latest();
+    }
+
     public function scopeHasMostPosts(Builder $builder)
     {
         return $builder->withCount('blogPosts')->orderBy('blog_posts_count', 'desc');
