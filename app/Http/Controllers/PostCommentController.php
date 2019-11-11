@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BlogPost;
 use App\Comment;
 use App\Http\Requests\StoreComment;
+use App\Jobs\NotifyUsersPostCommented;
 use App\Mail\CommentPosted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,8 @@ class PostCommentController extends Controller
             now()->addSeconds(10),
             new CommentPosted($comment)
         );
+
+        NotifyUsersPostCommented::dispatch($comment);
 
         return redirect()->back();
     }
