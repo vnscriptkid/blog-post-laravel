@@ -12,7 +12,7 @@ class Image extends Model
 
     // find the post that contains the image
     // SELECT * FROM blog_posts WHERE id = X
-    public function blogPost()
+    public function imageable()
     {
         // return $this->belongsTo('App\BlogPost');
         return $this->morphTo();
