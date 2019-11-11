@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\BlogPost;
 use App\Comment;
 use App\Http\Requests\StoreComment;
+use App\Mail\CommentPosted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class PostCommentController extends Controller
 {
@@ -38,11 +40,20 @@ class PostCommentController extends Controller
      */
     public function store(BlogPost $post, StoreComment $request)
     {
-        $validatedData = $request->validated();
+        $request->validated();
 
-        $validatedData['blog_post_id'] = $post->id;
-        $validatedData['user_id'] = Auth::id();
-        Comment::create($validatedData);
+        // $validatedData['blog_post_id'] = $post->id;
+        // $validatedData['user_id'] = Auth::id();
+        // Comment::create($validatedData);
+
+        $comment = $post->comments()->create([
+            'content' => $request->input('content'),
+            'user_id' => $request->user()->id
+        ]);
+
+        Mail::to($post->user)->send(
+            new CommentPosted($comment)
+        );
 
         return redirect()->back();
     }
