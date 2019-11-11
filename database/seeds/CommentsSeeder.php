@@ -28,12 +28,25 @@ class CommentsSeeder extends Seeder
             return;
         }
 
+        // comments on post
         factory(Comment::class, $commentsCount)->make()->each(function ($comment) use ($posts, $users) {
-            $comment->blog_post_id = $posts->random()->id;
+            // $comment->blog_post_id = $posts->random()->id;
+            $comment->commentable_id = $posts->random()->id;
+            $comment->commentable_type = BlogPost::class;
             $comment->user_id = $users->random()->id;
             $comment->save();
         });
 
-        $this->command->info("{$commentsCount} comments has been created successfully");
+        // comments on user profile
+        factory(Comment::class, $commentsCount)->make()->each(function ($comment) use ($users) {
+            $comment->commentable_id = $users->random()->id;
+            $comment->commentable_type = User::class;
+            $comment->user_id = $users->random()->id;
+            $comment->save();
+        });
+
+
+        $this->command->info("{$commentsCount} comments on post has been created successfully");
+        $this->command->info("{$commentsCount} comments on user profile has been created successfully");
     }
 }
