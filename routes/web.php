@@ -25,3 +25,4 @@ Route::get('/about', 'HomeController@about')->name('about');
 Route::get('/secret', 'HomeController@secret')->name('secret')->middleware('can:view.secret');
 
 Route::resource('posts.comments', 'PostCommentController')->only('store');
+Route::resource('users.comments', 'UserCommentController')->only('store');
