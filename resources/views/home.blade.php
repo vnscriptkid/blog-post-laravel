@@ -14,7 +14,12 @@
                         </div>
                     @endif
 
-                    Welcome to Blog Post
+                    @auth
+                        <h1>{{ __('messages.hello', ['name' => Auth::user()->name] ) }}</h1>
+                    @endauth
+
+                    <h1>{{ __('messages.welcome') }}</h1>
+                    {{-- <h1>@lang('messages.welcome')</h1> --}}
                 </div>
             </div>
         </div>

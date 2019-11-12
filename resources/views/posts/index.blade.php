@@ -25,7 +25,9 @@
 
                     {{-- comments count --}}
                     @if ($post->comments_count > 0)
-                        <span class="text-muted">{{ $post->comments_count }} comments</span>
+                        <p>
+                            {{ trans_choice('messages.comment_number', $post->comments_count) }}
+                        </p>
                     @else
                         <span class="text-muted">No comment yet</span>
                     @endif
