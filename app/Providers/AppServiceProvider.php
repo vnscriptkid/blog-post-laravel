@@ -7,6 +7,7 @@ use App\Comment;
 use App\Http\ViewComposers\ActivityComposer;
 use App\Observers\BlogPostObserver;
 use App\Observers\CommentObserver;
+use App\Services\ViewerCounter;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -41,5 +42,12 @@ class AppServiceProvider extends ServiceProvider
 
         BlogPost::observe(BlogPostObserver::class);
         Comment::observe(CommentObserver::class);
+
+        // $this->app->bind(ViewerCounter::class, function ($app) {
+        //     return new ViewerCounter(1);
+        // });
+        $this->app->singleton(ViewerCounter::class, function ($app) {
+            return new ViewerCounter(1);
+        });
     }
 }

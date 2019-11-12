@@ -55,7 +55,7 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $viewerCounter = new ViewerCounter();
+        $viewerCounter = resolve(ViewerCounter::class);
 
         // $post = BlogPost::with(['comments' => function ($query) {
         //     return $query->latest();

@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\Cache;
 
 class ViewerCounter
 {
+
+    public function __construct(int $timeout)
+    {
+        $this->timeout = $timeout;
+    }
+
     public function count($id): int
     {
         // Calculate # of current readers
@@ -17,7 +23,7 @@ class ViewerCounter
 
         foreach ($readers as $readerSession => $lastVisitTime) {
             // expired session
-            if ($now->diffInMinutes($lastVisitTime) > 1) {
+            if ($now->diffInMinutes($lastVisitTime) > $this->timeout) {
                 unset($readers[$readerSession]);
             }
         }

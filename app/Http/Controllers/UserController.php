@@ -55,7 +55,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $viewerCounter = new ViewerCounter();
+        $viewerCounter = resolve(ViewerCounter::class);
         return view('users.show', ['user' => $user, 'currentlyReading' => $viewerCounter->count($user->id)]);
     }
 
