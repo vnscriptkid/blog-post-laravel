@@ -41,11 +41,11 @@ class Comment extends Model
         parent::boot();
 
         // static::addGlobalScope(new LatestScope);
-        static::creating(function (Comment $comment) {
-            // Cache::forget("post-{$comment->blog_post_id}");
-            if ($comment->commentable_type === BlogPost::class) {
-                Cache::forget("post-{$comment->commentable_id}");
-            }
-        });
+        // static::creating(function (Comment $comment) {
+        //     // Cache::forget("post-{$comment->blog_post_id}");
+        //     if ($comment->commentable_type === BlogPost::class) {
+        //         Cache::forget("post-{$comment->commentable_id}");
+        //     }
+        // });
     }
 }

@@ -67,16 +67,16 @@ class BlogPost extends Model
 
         // static::addGlobalScope(new LatestScope);
 
-        static::deleting(function (BlogPost $blogPost) {
-            $blogPost->comments()->delete();
-        });
+        // static::deleting(function (BlogPost $blogPost) {
+        //     $blogPost->comments()->delete();
+        // });
 
-        static::restoring(function (BlogPost $blogPost) {
-            $blogPost->comments()->restore();
-        });
+        // static::restoring(function (BlogPost $blogPost) {
+        //     $blogPost->comments()->restore();
+        // });
 
-        static::updating((function (BlogPost $post) {
-            Cache::forget("post-{$post->id}");
-        }));
+        // static::updating((function (BlogPost $post) {
+        //     Cache::forget("post-{$post->id}");
+        // }));
     }
 }
