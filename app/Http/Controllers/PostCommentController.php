@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\BlogPost;
 use App\Comment;
+use App\Events\CommentPosted;
 use App\Http\Requests\StoreComment;
 use App\Jobs\NotifyWatchersPostCommented;
 use App\Jobs\ThrottleMail;
-use App\Mail\CommentPosted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
