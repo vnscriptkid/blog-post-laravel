@@ -6,6 +6,7 @@ use App\BlogPost;
 use App\Events\NewBlogPost;
 use App\Http\Requests\StorePost;
 use App\Image;
+use App\Services\ViewerCounter;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,22 +55,7 @@ class PostController extends Controller
 
     public function show($id)
     {
-        // Calculate # of current readers
-        $currentSession = session()->getId();
-        $readers = Cache::get("post-{$id}-readers", []);
-        $now = now();
-
-        $readers[$currentSession] = $now;
-
-        foreach ($readers as $readerSession => $lastVisitTime) {
-            // expired session
-            if ($now->diffInMinutes($lastVisitTime) > 1) {
-                unset($readers[$readerSession]);
-            }
-        }
-
-        // save readers
-        Cache::forever("post-{$id}-readers", $readers);
+        $viewerCounter = new ViewerCounter();
 
         // $post = BlogPost::with(['comments' => function ($query) {
         //     return $query->latest();
@@ -80,7 +66,7 @@ class PostController extends Controller
 
         return view('posts.show', [
             'post' => $post,
-            'currentlyReading' => count($readers),
+            'currentlyReading' => $viewerCounter->count($post->id),
         ]);
     }
 
