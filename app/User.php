@@ -81,4 +81,9 @@ class User extends Authenticatable
             })
             ->unique();
     }
+
+    public function scopeAreAdmins(Builder $builder)
+    {
+        return $builder->where('is_admin', true);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BlogPost;
+use App\Events\NewBlogPost;
 use App\Http\Requests\StorePost;
 use App\Image;
 use App\User;
@@ -103,6 +104,9 @@ class PostController extends Controller
                 'path' => $path
             ]));
         }
+
+        // dispatch event
+        event(new NewBlogPost($post));
 
         // $file->storeAs('postImages', $post->id . '.' . $file->guessExtension());
 
