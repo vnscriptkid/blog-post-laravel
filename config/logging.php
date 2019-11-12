@@ -1,5 +1,7 @@
 <?php
-
+// Log::info('some random info');
+// Log::warning('something you may care');
+// Log::error('you have to fix it');
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
