@@ -47,7 +47,15 @@ class AppServiceProvider extends ServiceProvider
         //     return new ViewerCounter(1);
         // });
         $this->app->singleton(ViewerCounter::class, function ($app) {
-            return new ViewerCounter(1);
+            return new ViewerCounter(
+                $app->make('Illuminate\Contracts\Cache\Factory'),
+                $app->make('Illuminate\Contracts\Session\Session'),
+                1
+            );
         });
+
+        // $this->app->when(ViewerCounter::class)
+        //     ->needs('$timeout')
+        //     ->give(env('VIEWER_COUNTER_TIMEOUT'));
     }
 }
