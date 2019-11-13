@@ -15,9 +15,11 @@ class CommentUser extends JsonResource
     public function toArray($request)
     {
         // return parent::toArray($request);
+        $condition = true; // show email or not depending on the condition
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
+            'email' => $this->when($condition, $this->email)
         ];
     }
 }
