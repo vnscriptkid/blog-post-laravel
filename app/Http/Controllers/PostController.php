@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BlogPost;
 use App\Events\NewBlogPost;
+use App\Facades\ViewerCounterFacade;
 use App\Http\Requests\StorePost;
 use App\Image;
 use App\Services\ViewerCounter;
@@ -55,7 +56,7 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $viewerCounter = resolve(ViewerCounter::class);
+        // $viewerCounter = resolve(ViewerCounter::class);
 
         // $post = BlogPost::with(['comments' => function ($query) {
         //     return $query->latest();
@@ -66,7 +67,7 @@ class PostController extends Controller
 
         return view('posts.show', [
             'post' => $post,
-            'currentlyReading' => $viewerCounter->count($post->id),
+            'currentlyReading' => ViewerCounterFacade::count($post->id),
         ]);
     }
 
