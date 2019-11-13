@@ -7,6 +7,7 @@ use App\Comment;
 use App\Http\ViewComposers\ActivityComposer;
 use App\Observers\BlogPostObserver;
 use App\Observers\CommentObserver;
+use App\Services\AnotherImplOfCounter;
 use App\Services\ViewerCounter;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -53,6 +54,12 @@ class AppServiceProvider extends ServiceProvider
                 1
             );
         });
+
+        $this->app->bind(
+            'App\Contracts\ViewerCounterContract',
+            ViewerCounter::class
+            // AnotherImplOfCounter::class // replace implementation detail without affecting other code
+        );
 
         // $this->app->when(ViewerCounter::class)
         //     ->needs('$timeout')

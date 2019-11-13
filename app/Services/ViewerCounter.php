@@ -3,10 +3,12 @@
 namespace App\Services;
 
 // use Illuminate\Support\Facades\Cache;
+
+use App\Contracts\ViewerCounterContract;
 use Illuminate\Contracts\Cache\Factory as Cache;
 use Illuminate\Contracts\Session\Session as Session;
 
-class ViewerCounter
+class ViewerCounter implements ViewerCounterContract
 {
     private $timeout;
     private $cache;

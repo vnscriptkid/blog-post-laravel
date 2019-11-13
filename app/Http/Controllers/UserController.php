@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\ViewerCounterContract;
 use App\Http\Requests\UpdateUser;
 use App\Image;
 use App\Services\ViewerCounter;
@@ -12,8 +13,11 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function __construct()
+    private $viewerCounter;
+
+    public function __construct(ViewerCounterContract $viewerCounter)
     {
+        $this->viewerCounter = $viewerCounter;
         $this->middleware('auth')->only(['show', 'edit', 'update']);
     }
     /**
@@ -55,8 +59,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $viewerCounter = resolve(ViewerCounter::class);
-        return view('users.show', ['user' => $user, 'currentlyReading' => $viewerCounter->count($user->id)]);
+        // $viewerCounter = resolve(ViewerCounter::class);
+        return view('users.show', ['user' => $user, 'currentlyReading' => $this->viewerCounter->count($user->id)]);
     }
 
     /**
