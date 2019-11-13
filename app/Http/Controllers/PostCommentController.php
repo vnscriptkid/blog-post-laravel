@@ -6,6 +6,7 @@ use App\BlogPost;
 use App\Comment;
 use App\Events\CommentPosted;
 use App\Http\Requests\StoreComment;
+use App\Http\Resources\Comment as CommentResource;
 use App\Jobs\NotifyWatchersPostCommented;
 use App\Jobs\ThrottleMail;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class PostCommentController extends Controller
 {
     public function index(BlogPost $post)
     {
-        return $post->comments;
+        return CommentResource::collection($post->comments()->with('user')->get());
     }
 
     public function store(BlogPost $post, StoreComment $request)
