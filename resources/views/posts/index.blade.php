@@ -19,13 +19,15 @@
                         @endbadge
 
                         {{-- time and who --}}
-                        @updated(['time' => $post->created_at->diffForHumans(), 'user' => $post->user->name])
+                        @updated(['time' => $post->created_at->diffForHumans(), 'userName' => $post->user->name, 'userId' => $post->user->id])
                         @endupdated
                     {{-- end of created time --}}
 
                     {{-- comments count --}}
                     @if ($post->comments_count > 0)
-                        <span class="text-muted">{{ $post->comments_count }} comments</span>
+                        <p>
+                            {{ trans_choice('messages.comment_number', $post->comments_count) }}
+                        </p>
                     @else
                         <span class="text-muted">No comment yet</span>
                     @endif

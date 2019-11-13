@@ -12,6 +12,8 @@ class Comment extends Model
 {
     protected $fillable = ['content', 'user_id', 'blog_post_id'];
 
+    protected $hidden = ['deleted_at', 'commentable_id', 'commentable_type'];
+
     use SoftDeletes;
     // find post of a comment
     // SELECT * FROM blog_posts WHERE blog_post_id = 10
@@ -41,11 +43,11 @@ class Comment extends Model
         parent::boot();
 
         // static::addGlobalScope(new LatestScope);
-        static::creating(function (Comment $comment) {
-            // Cache::forget("post-{$comment->blog_post_id}");
-            if ($comment->commentable_type === BlogPost::class) {
-                Cache::forget("post-{$comment->commentable_id}");
-            }
-        });
+        // static::creating(function (Comment $comment) {
+        //     // Cache::forget("post-{$comment->blog_post_id}");
+        //     if ($comment->commentable_type === BlogPost::class) {
+        //         Cache::forget("post-{$comment->commentable_id}");
+        //     }
+        // });
     }
 }

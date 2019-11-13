@@ -21,19 +21,18 @@
                     @endcan
                 @endauth
             </div>
-
-
-
-            <div class="input-group mb-3 mt-3">
-                <div>
-                </div>
-            </div>
         </div>
+        <div class="col col-md-8">
+            <h3>{{ $user->name }}</h3>
+            {{-- how many people is seeing this profile --}}
+            <span class="badge badge-info">{{ $currentlyReading }} people seeing this profile</span>
 
+            <div class="my-3">
+                @include('comments._form')
+            </div>
 
-
-        <h3>{{ $user->name }}</h3>
-
-
+            @comments(['list' => $user->profileComments])
+            @endcomments
+        </div>
     </div>
 @endsection

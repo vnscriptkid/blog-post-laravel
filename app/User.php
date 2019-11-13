@@ -72,4 +72,18 @@ class User extends Authenticatable
             // ->has('blogPosts', '>=', 2)
             ->orderBy('blog_posts_count', 'desc');
     }
+
+    public function scopeThatCommentedOnPost(Builder $builder, BlogPost $post)
+    {
+        return $post->comments
+            ->map(function ($comment) {
+                return $comment->user;
+            })
+            ->unique();
+    }
+
+    public function scopeAreAdmins(Builder $builder)
+    {
+        return $builder->where('is_admin', true);
+    }
 }

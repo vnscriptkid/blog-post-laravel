@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">{{ __('Dashboard') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -14,7 +14,12 @@
                         </div>
                     @endif
 
-                    Welcome to Blog Post
+                    @auth
+                        <h1>{{ __('messages.hello', ['name' => Auth::user()->name] ) }}</h1>
+                    @endauth
+
+                    <h1>{{ __('messages.welcome') }}</h1>
+                    {{-- <h1>@lang('messages.welcome')</h1> --}}
                 </div>
             </div>
         </div>
