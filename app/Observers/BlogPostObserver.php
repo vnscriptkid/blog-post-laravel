@@ -14,7 +14,6 @@ class BlogPostObserver
 
     public function deleting(BlogPost $post)
     {
-        dd('post deleting');
         $post->comments()->delete();
     }
 
