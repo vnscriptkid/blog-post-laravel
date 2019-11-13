@@ -12,6 +12,8 @@ class Comment extends Model
 {
     protected $fillable = ['content', 'user_id', 'blog_post_id'];
 
+    protected $hidden = ['deleted_at', 'commentable_id', 'commentable_type'];
+
     use SoftDeletes;
     // find post of a comment
     // SELECT * FROM blog_posts WHERE blog_post_id = 10

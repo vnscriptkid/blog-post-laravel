@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Mail;
 
 class PostCommentController extends Controller
 {
+    public function index(BlogPost $post)
+    {
+        return $post->comments;
+    }
+
     public function store(BlogPost $post, StoreComment $request)
     {
         $request->validated();
