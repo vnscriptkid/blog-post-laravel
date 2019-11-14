@@ -14,10 +14,14 @@ class PostCommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(BlogPost $post)
+    public function index(BlogPost $post, Request $request)
     {
+        $perPage = $request->input('per_page') ?? 2;
+
         return CommentResource::collection(
-            $post->comments()->with('user')->paginate(2)
+            $post->comments()->with('user')->paginate($perPage)->appends([
+                'per_page' => $perPage // add this to `links` prop
+            ])
         );
     }
 
