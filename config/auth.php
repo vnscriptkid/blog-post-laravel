@@ -44,7 +44,10 @@ return [
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
-            'hash' => false,
+            'hash' => false
+            // custom config
+            // 'input_key' => 'token', // name of param in request
+            // 'storage_key' => 'token' // name of column in db
         ],
     ],
 
