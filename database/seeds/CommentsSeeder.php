@@ -14,12 +14,6 @@ class CommentsSeeder extends Seeder
      */
     public function run()
     {
-        $commentsCount = (int) $this->command->ask('How many comments do you want to create', 100);
-
-        if ($commentsCount < 1) {
-            $commentsCount = 1;
-        }
-
         $posts = BlogPost::all();
         $users = User::all();
 
@@ -27,13 +21,33 @@ class CommentsSeeder extends Seeder
             $this->command->error("No comment has been created as no post or user existed");
             return;
         }
+        // create comments on post
+        $commentsOnPost = 0;
+        $posts->each(function ($post) use ($users, &$commentsOnPost) {
+            $numOfComments = random_int(1, 5);
+            $commentsOnPost += $numOfComments;
+            factory(Comment::class, $numOfComments)->make()->each(function ($comment) use ($post, $users) {
+                $comment->commentable_type = BlogPost::class;
+                $comment->commentable_id = $post->id;
+                $comment->user_id = $users->random()->id;
+                $comment->save();
+            });
+        });
+        $this->command->info("{$commentsOnPost} comments on posts has been created");
 
-        factory(Comment::class, $commentsCount)->make()->each(function ($comment) use ($posts, $users) {
-            $comment->blog_post_id = $posts->random()->id;
-            $comment->user_id = $users->random()->id;
-            $comment->save();
+        // create comments on user profile
+        $commentsOnProfile = 0;
+        $users->each(function ($user) use ($users, &$commentsOnProfile) {
+            $numOfComments = random_int(1, 5);
+            $commentsOnProfile += $numOfComments;
+            factory(Comment::class, $numOfComments)->make()->each(function ($comment) use ($user, $users) {
+                $comment->commentable_type = User::class;
+                $comment->commentable_id = $user->id;
+                $comment->user_id = $users->random()->id;
+                $comment->save();
+            });
         });
 
-        $this->command->info("{$commentsCount} comments has been created successfully");
+        $this->command->info("{$commentsOnProfile} comments on profiles has been created");
     }
 }
