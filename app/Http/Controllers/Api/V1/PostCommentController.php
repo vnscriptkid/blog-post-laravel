@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\BlogPost;
+use App\Comment;
 use App\Events\CommentPosted;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreComment;
@@ -59,9 +60,9 @@ class PostCommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(BlogPost $post, Comment $comment)
     {
-        //
+        return new CommentResource($comment);
     }
 
     /**
@@ -71,9 +72,13 @@ class PostCommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogPost $post, Comment $comment, StoreComment $request)
     {
-        //
+        // TODO: validate if comment belongs to post
+        // TODO: validate if you are the comment author
+        $comment->content = $request->input('content');
+        $comment->save();
+        return new CommentResource($comment);
     }
 
     /**
@@ -82,8 +87,9 @@ class PostCommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(BlogPost $post, Comment $comment)
     {
-        //
+        $comment->delete();
+        return response()->noContent();
     }
 }
