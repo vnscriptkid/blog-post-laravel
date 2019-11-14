@@ -18,7 +18,7 @@ class HomeTest extends TestCase
     {
         $response = $this->get('/');
         $response->assertStatus(200);
-        $response->assertSeeText('Welcome to Blog Post');
+        $response->assertSeeText('Chào mừng đến với Laravel');
     }
 
     public function test_about_page_works_correctly()
