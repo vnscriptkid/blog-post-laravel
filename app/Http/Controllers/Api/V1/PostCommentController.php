@@ -14,7 +14,7 @@ class PostCommentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->only(['store']);
+        $this->middleware('auth:api')->only(['store', 'update', 'destroy']);
     }
     /**
      * Display a listing of the resource.
@@ -76,6 +76,8 @@ class PostCommentController extends Controller
     {
         // TODO: validate if comment belongs to post
         // TODO: validate if you are the comment author
+        $this->authorize('update', $comment);
+
         $comment->content = $request->input('content');
         $comment->save();
         return new CommentResource($comment);
@@ -89,6 +91,8 @@ class PostCommentController extends Controller
      */
     public function destroy(BlogPost $post, Comment $comment)
     {
+        $this->authorize('delete', $comment);
+
         $comment->delete();
         return response()->noContent();
     }
