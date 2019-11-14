@@ -9,6 +9,7 @@ use App\Observers\BlogPostObserver;
 use App\Observers\CommentObserver;
 use App\Services\AnotherImplOfCounter;
 use App\Services\ViewerCounter;
+use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -64,5 +65,7 @@ class AppServiceProvider extends ServiceProvider
         // $this->app->when(ViewerCounter::class)
         //     ->needs('$timeout')
         //     ->give(env('VIEWER_COUNTER_TIMEOUT'));
+
+        Resource::withoutWrapping(); // data: [ ]
     }
 }
